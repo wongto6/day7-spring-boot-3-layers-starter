@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private final IEmployeeRepository employeeRepository;
+
     public EmployeeService(IEmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
@@ -20,14 +21,14 @@ public class EmployeeService {
 
     public Employee create(Employee employee) {
 
-        if(isTooYoungTooOld(employee) || isNotCompetitive(employee)){
+        if (isTooYoungTooOld(employee) || isNotCompetitive(employee)) {
             throw new EmployeeAgeNotValidException();
         }
 
         return employeeRepository.addEmployee(employee);
     }
 
-    public Employee update(Integer employeeId, Employee employee){
+    public Employee update(Integer employeeId, Employee employee) {
         Employee employeeExisted = employeeRepository.getEmployeeById(employeeId);
 
         var nameToUpdate = employee.getName() == null ? employeeExisted.getName() : employee.getName();
@@ -40,11 +41,11 @@ public class EmployeeService {
         return employeeRepository.updateEmployee(employeeId, employeeToUpdate);
     }
 
-    public boolean isNotCompetitive(Employee employee){
-        return employee.getAge() > 30 && employee.getSalary() < 20000.0;
+    public boolean isNotCompetitive(Employee employee) {
+        return employee.getAge() >= 30 && employee.getSalary() < 20000.0;
     }
 
-    public boolean isTooYoungTooOld(Employee employee){
+    public boolean isTooYoungTooOld(Employee employee) {
         return employee.getAge() < 18 || employee.getAge() > 65;
     }
 }

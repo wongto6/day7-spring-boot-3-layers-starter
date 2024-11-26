@@ -88,6 +88,7 @@ class EmployeeServiceTest {
         assertThrows(EmployeeAgeNotValidException.class, () -> employeeService.create(kitty));
         verify(mockedEmployeeRepository, never()).addEmployee(any());
     }
+
     @Test
     void should_return_EmployeeAgeNotValidException_when_create_employee_given_age_34_salary_3500() {
         //given
