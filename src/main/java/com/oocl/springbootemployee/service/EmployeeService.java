@@ -18,6 +18,11 @@ public class EmployeeService {
     }
 
     public Employee create(Employee employee) {
+
+        if(isTooYoungTooOld(employee) || isNotCompetitive(employee)){
+            throw new EmployeeAgeNotValidException();
+        }
+
         return employeeRepository.addEmployee(employee);
     }
 
@@ -32,5 +37,13 @@ public class EmployeeService {
         final var employeeToUpdate = new Employee(employeeId, nameToUpdate, ageToUpdate, genderToUpdate, salaryToUpdate);
 
         return employeeRepository.updateEmployee(employeeId, employeeToUpdate);
+    }
+
+    public boolean isNotCompetitive(Employee employee){
+        return employee.getAge() > 30 && employee.getSalary() < 20000.0;
+    }
+
+    public boolean isTooYoungTooOld(Employee employee){
+        return employee.getAge() < 18 || employee.getAge() > 65;
     }
 }

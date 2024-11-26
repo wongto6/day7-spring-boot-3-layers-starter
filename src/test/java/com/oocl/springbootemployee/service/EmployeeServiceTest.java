@@ -2,16 +2,15 @@ package com.oocl.springbootemployee.service;
 
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
-import com.oocl.springbootemployee.repository.EmployeeRepository;
 import com.oocl.springbootemployee.repository.IEmployeeRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class EmployeeServiceTest {
     @Test
@@ -38,9 +37,41 @@ class EmployeeServiceTest {
         EmployeeService employeeService = new EmployeeService(mockedEmployeeRepository);
 
         //when
-        Employee createdEmployee = employeeService.creat(lucy);
+        Employee createdEmployee = employeeService.create(lucy);
 
         //then
         assertEquals("Lucy", createdEmployee.getName());
     }
+
+    @Test
+    void should_return_the_update_employee_when_update_given_a_employee() {
+        //given
+        IEmployeeRepository mockedEmployeeRepository = mock(IEmployeeRepository.class);
+        Employee lucy = new Employee(1, "Lucy", 18, Gender.FEMALE, 8000.0);
+        when(mockedEmployeeRepository.updateEmployee(any(), any())).thenReturn(lucy);
+        EmployeeService employeeService = new EmployeeService(mockedEmployeeRepository);
+
+        //when
+        Employee createdEmployee = employeeService.update(lucy.getId(), lucy);
+
+        //then
+        assertEquals("Lucy", createdEmployee.getName());
+    }
+
+    @Test
+    void should_return_EmployeeAgeNotValidException_when_create_employee_given_age_6() {
+        //given
+        IEmployeeRepository mockedEmployeeRepository = mock(IEmployeeRepository.class);
+        EmployeeService employeeService = new EmployeeService(mockedEmployeeRepository);
+
+        //when
+        Employee kitty = new Employee(1, "Kitty", 6, Gender.FEMALE, 8000.0);
+        when(mockedEmployeeRepository.addEmployee(any())).thenReturn(kitty);
+
+        //then
+        assertThrows(EmployeeAgeNotValidException.class, () -> employeeService.create(kitty));
+        verify(mockedEmployeeRepository, never()).addEmployee(any());
+    }
+
+
 }
