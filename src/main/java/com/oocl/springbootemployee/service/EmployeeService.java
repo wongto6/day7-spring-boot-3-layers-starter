@@ -17,7 +17,7 @@ public class EmployeeService {
         return employeeRepository.getAll();
     }
 
-    public Employee creat(Employee employee) {
+    public Employee create(Employee employee) {
         return employeeRepository.addEmployee(employee);
     }
 
